@@ -13,11 +13,6 @@ namespace Ntt.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<WeatherForecastController> _logger;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
@@ -30,7 +25,7 @@ namespace Ntt.Controllers
 
         [HttpGet]
         [RouteAttribute("GetClaimDetailsByMember/{requestedDate}")]
-        public IEnumerable<MemberClaimsModel> Get(string requestedDate)
+        public IEnumerable<MemberClaimsModel> GetClaimDetailsByMember(string requestedDate)
         {
             try
             {
@@ -38,8 +33,8 @@ namespace Ntt.Controllers
                 List<Models.Claim> claimList = new List<Models.Claim>();
 
 
-                memberList = memberservice.ReadMemberCSVFile("C:/Users/medad/source/repos/Ntt/Ntt/ExcelFiles/Member.csv");
-                claimList = claimservice.ReadClaimCSVFile("C:/Users/medad/source/repos/Ntt/Ntt/ExcelFiles/Claim.csv");
+                memberList = GetMemberList();
+                claimList = GetClaimsList();
 
                 var memberClaimList = (from m in memberList
                                        select new MemberClaimsModel
@@ -64,6 +59,15 @@ namespace Ntt.Controllers
             {
                 throw ex;
             }
+        }
+
+        private List<Member> GetMemberList()
+        {
+            return memberservice.ReadMemberCSVFile("C:/Users/medad/source/repos/Ntt/Ntt/ExcelFiles/Member.csv");
+        }
+        private List<Claim> GetClaimsList()
+        {
+            return claimservice.ReadClaimCSVFile("C:/Users/medad/source/repos/Ntt/Ntt/ExcelFiles/Claim.csv");
         }
 
     }
